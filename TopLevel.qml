@@ -32,7 +32,8 @@ Item {
         },
         "openai": {
             "accessToken": ""
-        }
+        },
+        "networkProxy": ""
     }
 
     function resetSettings() {

@@ -110,6 +110,7 @@ Page {
         topP: root.settings.chat.topP
         frequencyPenalty: root.settings.chat.frequencyPenalty
         presencePenalty: root.settings.chat.presencePenalty
+        networkProxy: root.settings.networkProxy
         messages: messageModel.messages
         onRequestFinished: generatedText => {
                                console.log("GPT request finished")
@@ -379,7 +380,6 @@ Page {
 
         Text {
             Layout.fillWidth: true
-            Layout.fillHeight: true
             text: gptRequest.errorString
             visible: gptRequest.status === OpenAIRequest.Error
             elide: Text.ElideRight

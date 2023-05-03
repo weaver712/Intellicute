@@ -27,6 +27,7 @@ Page {
         root.settings.chat.presencePenalty = presencePenaltySlider.value
         root.settings.chat.maxTokens = maxTokensSpinBox.value
         root.settings.openai.accessToken = openAiAccessTokenTextField.text
+        root.settings.networkProxy = networkproxytextfield.text
     }
 
     QtObject {
@@ -275,6 +276,22 @@ Page {
                                         text: root.settings.tts.watson.apiUrl
                                     }
                                 }
+                            }
+                        }
+                    }
+
+                    GroupBox {
+                        Layout.fillWidth: true
+                        title: qsTr("Network")
+                        RowLayout {
+                            Label {
+                                text: qsTr("Network Proxy")
+                            }
+
+                            TextField {
+                                id: networkproxytextfield
+                                Layout.fillWidth: true
+                                text: root.settings.networkProxy
                             }
                         }
                     }

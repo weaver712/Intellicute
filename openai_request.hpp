@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include <QObject>
 #include <QNetworkAccessManager>
@@ -25,6 +25,7 @@ class OpenAIRequest : public QObject
     Q_PROPERTY(double frequencyPenalty READ frequencyPenalty WRITE setFrequencyPenalty NOTIFY frequencyPenaltyChanged)
     Q_PROPERTY(double presencePenalty READ presencePenalty WRITE setPresencePenalty NOTIFY presencePenaltyChanged)
     Q_PROPERTY(QList<OpenAIMessage*> messages READ messages WRITE setMessages NOTIFY messagesChanged)
+    Q_PROPERTY(QString networkProxy READ networkProxy WRITE setNetworkProxy NOTIFY networkProxyChanged)
 
     Q_ENUMS(RequestStatus)
 
@@ -74,6 +75,9 @@ public slots:
     QList<OpenAIMessage*> messages() const;
     void setMessages(const QList<OpenAIMessage *> &newMessages);
 
+    QString networkProxy() const;
+    void setNetworkProxy(const QString& networkProxy);
+
     // execute a request
     void execute();
 
@@ -97,6 +101,7 @@ signals:
     void frequencyPenaltyChanged();
     void presencePenaltyChanged();
     void messagesChanged();
+    void networkProxyChanged();
 
 private:
     QNetworkAccessManager *m_networkAccessManager;
@@ -112,9 +117,12 @@ private:
     double m_topP;
     double m_frequencyPenalty;
     double m_presencePenalty;
+    QString m_networkProxy;
     QList<OpenAIMessage*> m_messages;
+
 
     void sendRequest();
     void sendChatRequest();
     void sendMultiPartRequest();
+    void updateNetworkProxy();
 };

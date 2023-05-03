@@ -65,6 +65,7 @@ void OpenAIRequest::execute()
 // Send a request to the OpenAI API
 void OpenAIRequest::sendRequest()
 {
+    updateNetworkProxy();
     // Set up the API endpoint URL
     const QUrl endpointUrl("https://api.openai.com/v1/completions");
 
@@ -110,6 +111,7 @@ void OpenAIRequest::sendRequest()
 
 void OpenAIRequest::sendChatRequest()
 {
+    updateNetworkProxy();
     // Set up the API endpoint URL
     const QUrl endpointUrl("https://api.openai.com/v1/chat/completions");
 
@@ -168,6 +170,7 @@ void OpenAIRequest::sendChatRequest()
 
 void OpenAIRequest::sendMultiPartRequest()
 {
+    updateNetworkProxy();
     // Set up the API endpoint URL
     const QUrl endpointUrl("https://api.openai.com/v1/audio/transcriptions");
 
@@ -363,4 +366,38 @@ void OpenAIRequest::setMessages(const QList<OpenAIMessage *> &newMessages)
         return;
     m_messages = newMessages;
     emit messagesChanged();
+}
+
+QString OpenAIRequest::networkProxy() const
+{
+    return m_networkProxy;
+}
+
+void OpenAIRequest::setNetworkProxy(const QString &networkProxy)
+{
+    m_networkProxy = networkProxy;
+}
+
+void OpenAIRequest::updateNetworkProxy() {
+
+    if (m_networkProxy.isEmpty()) {
+        m_networkAccessManager->setProxy(QNetworkProxy(QNetworkProxy::NoProxy));
+    } else {
+        auto comp = m_networkProxy.split(":");
+        if ( comp.size() != 2 || comp[1].toInt() == 0) {
+            m_networkAccessManager->setProxy(QNetworkProxy(QNetworkProxy::NoProxy));
+            return;
+        }
+
+        auto old = m_networkAccessManager->proxy();
+        if (old.hostName() == comp[0] && old.port() == comp[1].toInt()) {
+            return;
+        }
+
+        QNetworkProxy proxy;
+        proxy.setType(QNetworkProxy::HttpProxy);
+        proxy.setHostName(comp[0]);
+        proxy.setPort(comp[1].toInt());
+        m_networkAccessManager->setProxy(proxy);
+    }
 }
